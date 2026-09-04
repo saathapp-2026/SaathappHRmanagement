@@ -1,1 +1,5 @@
-.DS_Store
+.DS_Store 
+Admin/node_modules 
+Admin/dist 
+Admin/.env 
+Admin/.env.local 
