@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Portal Exclusions (Admin, Employee, Manager)
+**/node_modules
+**/dist
+**/.env
+**/.env.local
+**/.vercel
+
+node_modules/
+dist/
+.env
+.env.local
+.vercel/
+
+Admin/node_modules
+Admin/dist
+Admin/.env
+Admin/.env.local
+Admin/.vercel
+
+Employee/node_modules
+Employee/dist
+Employee/.env
+Employee/.env.local
+Employee/.vercel
+
+Manager/node_modules
+Manager/dist
+Manager/.env
+Manager/.env.local
+Manager/.vercel
