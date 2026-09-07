@@ -1,5 +1,5 @@
 "use client";
-import { MockPortalService } from "@/services/mockPortalService";
+import { authService } from "@/services/employee/auth.service";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -38,8 +38,10 @@ export default function Sidebar() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await MockPortalService.logout();
-    router.push("/login");
+    if (confirm("Are you sure you want to log out?")) {
+      await authService.signOut();
+      router.push("/login");
+    }
   };
 
   return (

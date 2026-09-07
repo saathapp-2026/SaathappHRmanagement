@@ -1,5 +1,5 @@
 "use client";
-import { MockPortalService } from "@/services/mockPortalService";
+import { PortalService } from "@/services/portalService";
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
@@ -16,7 +16,7 @@ export default function ApplyLeavePage() {
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({ leaveType: "", startDate: "", endDate: "", reason: "" });
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -30,7 +30,7 @@ export default function ApplyLeavePage() {
     setError("");
     
     try {
-      const res = await MockPortalService.applyLeave(formData);
+      const res = await PortalService.applyLeave(formData);
       if (!res.success) {
         setError("Failed to apply for leave");
         return;

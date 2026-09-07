@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Settings, Lock, Bell, Shield, Smartphone, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { MockPortalService } from "@/services/mockPortalService";
+import { supabase } from "@/lib/supabase/client";
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
@@ -25,16 +25,22 @@ export default function SettingsPage() {
       return;
     }
     setLoading(true);
-    // Mock changing password
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const { error } = await supabase.auth.updateUser({ password: newP });
     setLoading(false);
-    alert("Password updated successfully (mock).");
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Password updated successfully.");
+      (document.getElementById('current') as HTMLInputElement).value = '';
+      (document.getElementById('new') as HTMLInputElement).value = '';
+      (document.getElementById('confirm') as HTMLInputElement).value = '';
+    }
   };
 
   const handleLogoutDevice = async () => {
-    // Mock logout from a device
     if (confirm("Are you sure you want to log out from this device?")) {
-      alert("Device logged out successfully (mock).");
+      await supabase.auth.signOut();
+      window.location.href = '/login';
     }
   };
 
@@ -117,14 +123,17 @@ export default function SettingsPage() {
                     <Smartphone className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-800">iPhone 13 Pro</p>
-                    <p className="text-xs text-slate-500">Mumbai, India • Active now</p>
+                    <p className="font-semibold text-slate-800">Current Device</p>
+                    <p className="text-xs text-slate-500">Active now</p>
                   </div>
                 </div>
                 <Button variant="outline" size="sm" className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200" onClick={handleLogoutDevice}>
                   Logout
                 </Button>
               </div>
+              <p className="text-xs text-slate-500 mt-4 text-center">
+                Session history tracking is not currently available.
+              </p>
             </CardContent>
           </Card>
         </div>

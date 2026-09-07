@@ -1,5 +1,5 @@
 "use client";
-import { MockPortalService } from "@/services/mockPortalService";
+import { PortalService } from "@/services/portalService";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ export default function ConcernsPage() {
   useEffect(() => {
     async function fetchConcerns() {
       try {
-        const res = await MockPortalService.getConcerns();
+        const res = await PortalService.getConcerns();
         if (res) {
           setConcerns(res);
         }

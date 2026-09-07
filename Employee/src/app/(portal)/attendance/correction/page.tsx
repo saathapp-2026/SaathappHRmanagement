@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MockPortalService } from "@/services/mockPortalService";
+import { supabase } from "@/lib/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +26,10 @@ export default function AttendanceCorrectionPage() {
     setIsLoading(true);
 
     try {
-      const res = await MockPortalService.submitAttendanceCorrection(formData);
+      
+      // const supabase = createClientComponentClient();
+      const res = await supabase.from('attendance_corrections').insert(formData);
+
       if (res.success) {
         setSuccess(true);
         setTimeout(() => router.push("/attendance"), 1500);

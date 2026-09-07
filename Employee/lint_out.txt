@@ -1,0 +1,178 @@
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/account-status/page.tsx
+  5:10  warning  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/announcements/page.tsx
+   5:10  warning  'Bell' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   5:16  warning  'Megaphone' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   5:48  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  57:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/announcements/page.tsx:57:5
+  55 |
+  56 |   useEffect(() => {
+> 57 |     fetchAnnouncements();
+     |     ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  58 |   }, []);
+  59 |
+  60 |   const markAsRead = async (id: string) => {  react-hooks/set-state-in-effect
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/attendance/correction/page.tsx
+  39:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/attendance/page.tsx
+  3:52  warning  'CardDescription' is defined but never used  @typescript-eslint/no-unused-vars
+  5:10  warning  'CheckCircle2' is defined but never used     @typescript-eslint/no-unused-vars
+  5:24  warning  'Clock' is defined but never used            @typescript-eslint/no-unused-vars
+  5:31  warning  'AlertCircle' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/calendar/page.tsx
+   5:36  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  43:30  warning  'error' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  81:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/calendar/page.tsx:81:5
+  79 |
+  80 |   useEffect(() => {
+> 81 |     fetchEvents();
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  82 |   }, []);
+  83 |
+  84 |   const toggleFilter = (key: keyof typeof filters) => {  react-hooks/set-state-in-effect
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/concerns/page.tsx
+   5:10  warning  'Button' is defined but never used        @typescript-eslint/no-unused-vars
+  12:44  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/concerns/raise/page.tsx
+  44:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/dashboard/page.tsx
+   12:70  warning  'Phone' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   18:10  warning  'currentTime' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   49:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/dashboard/page.tsx:49:5
+  47 |
+  48 |   useEffect(() => {
+> 49 |     loadToday();
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  50 |     
+  51 |     async function fetchName() {
+  52 |       try {  react-hooks/set-state-in-effect
+   55:16  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   80:16  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  108:16  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  145:75  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react/no-unescaped-entities
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/documents/page.tsx
+   5:16  warning  'CardHeader' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   5:28  warning  'CardTitle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  40:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/documents/page.tsx:40:5
+  38 |
+  39 |   useEffect(() => {
+> 40 |     loadDocuments();
+     |     ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  41 |   }, []);
+  42 |
+  43 |     react-hooks/set-state-in-effect
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/help/[id]/page.tsx
+  6:10  warning  'Label' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/help/new/page.tsx
+  4:20  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/help/page.tsx
+  6:27  warning  'Mail' is defined but never used      @typescript-eslint/no-unused-vars
+  6:33  warning  'Phone' is defined but never used     @typescript-eslint/no-unused-vars
+  6:78  warning  'FileText' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/leave/apply/page.tsx
+  42:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/leave/page.tsx
+   6:21  warning  'Calendar' is defined but never used      @typescript-eslint/no-unused-vars
+  12:44  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:42  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/notifications/page.tsx
+   7:49  warning  'Filter' is defined but never used                                                                  @typescript-eslint/no-unused-vars
+  34:72  warning  'payload' is defined but never used                                                                 @typescript-eslint/no-unused-vars
+  37:7   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/profile/page.tsx
+  175:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/(portal)/settings/page.tsx
+  9:10  warning  'supabase' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/forgot-password/page.tsx
+  31:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/invite/page.tsx
+  39:16  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+  76:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/login/page.tsx
+  46:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/reset-password/page.tsx
+   3:21  warning  'useSearchParams' is defined but never used  @typescript-eslint/no-unused-vars
+  51:14  warning  'err' is defined but never used              @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/app/signup/page.tsx
+  42:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/components/layout/AuthGuard.tsx
+  11:10  warning  'isAuthenticated' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  80:74  warning  'session' is defined but never used                   @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/components/layout/Header.tsx
+  42:16  warning  'err' is defined but never used                                                                     @typescript-eslint/no-unused-vars
+  48:5   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/services/employee/announcements.service.ts
+  1:10  warning  'supabase' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/services/employee/calendar.service.ts
+  1:10  warning  'supabase' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/services/employee/concerns.service.ts
+  1:10  warning  'supabase' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/services/employee/leave.service.ts
+  1:10  warning  'supabase' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nikita/Desktop/SaathappHRmanagement/Employee/src/services/employee/profile-change.service.ts
+  1:10  warning  'supabase' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 56 problems (8 errors, 48 warnings)
+  0 errors and 3 warnings potentially fixable with the `--fix` option.
+

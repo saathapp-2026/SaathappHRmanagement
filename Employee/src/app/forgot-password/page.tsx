@@ -1,14 +1,12 @@
 "use client";
-import { MockPortalService } from "@/services/mockPortalService";
-
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { authService } from "@/services/employee/auth.service";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -22,10 +20,10 @@ export default function ForgotPasswordPage() {
     setError("");
 
     try {
-      const res = await MockPortalService.forgotPassword({ email });
+      const { error: resetError } = await authService.resetPassword(email);
 
-      if (!res.success) {
-        setError("Failed to send reset email");
+      if (resetError) {
+        setError(resetError.message || "Failed to send reset email");
         return;
       }
 
@@ -60,7 +58,7 @@ export default function ForgotPasswordPage() {
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <p className="text-slate-700">
-              We've sent a password reset link to <br/>
+              We&apos;ve sent a password reset link to <br/>
               <span className="font-semibold">{email}</span>
             </p>
             <Link href="/login" className="inline-flex shrink-0 items-center justify-center border-slate-200 bg-white hover:bg-slate-50 text-slate-700 border transition-all outline-none mt-4 w-full h-12 rounded-xl text-base font-semibold">
@@ -93,7 +91,7 @@ export default function ForgotPasswordPage() {
             </CardContent>
             
             <CardFooter className="flex flex-col gap-4 px-8 pb-8 pt-4">
-              <Button type="submit" className="w-full h-12 rounded-xl text-base bg-blue-600 hover:bg-blue-700 font-semibold" disabled={loading}>
+              <Button type="submit" className="w-full h-12 rounded-xl text-base bg-blue-600 hover:bg-blue-700 font-semibold" disabled={loading || !email}>
                 {loading ? "Sending..." : "Send Reset Link"}
               </Button>
               <Link href="/login" className="flex items-center justify-center text-sm text-slate-500 hover:text-blue-600 font-medium transition-colors">

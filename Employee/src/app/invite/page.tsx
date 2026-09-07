@@ -1,17 +1,14 @@
 "use client";
-import { MockPortalService } from "@/services/mockPortalService";
-
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import { authService } from "@/services/employee/auth.service";
 
-export default function InvitePage({ params }: { params: Promise<{ token: string }> }) {
-  const resolvedParams = use(params);
-  const { token } = resolvedParams;
+function InviteForm() {
   const router = useRouter();
   
   const [loading, setLoading] = useState(true);
@@ -25,12 +22,19 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
 
   useEffect(() => {
     async function checkToken() {
+      // Check hash for error
+      if (window.location.hash.includes('error=')) {
+        setError("Invalid or expired invitation link.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await MockPortalService.verifyInvite(token);
-        if (!res.success) {
+        const { user, profile } = await authService.getCurrentEmployee();
+        if (!user) {
           setError("Invalid or expired invitation link.");
         } else {
-          setInviteData(res.employee);
+          setInviteData({ email: user.email || '', name: profile?.name || 'Employee' });
         }
       } catch (err) {
         setError("Failed to verify invitation. Please try again.");
@@ -38,8 +42,10 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
         setLoading(false);
       }
     }
-    checkToken();
-  }, [token]);
+    
+    // Give Supabase client a moment to process the hash
+    setTimeout(checkToken, 1000);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,10 +62,10 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
     setError("");
 
     try {
-      const res = await MockPortalService.acceptInvite({ token, password });
+      const { error: updateError } = await authService.updatePassword(password);
       
-      if (!res.success) {
-        setError("Failed to set password.");
+      if (updateError) {
+        setError(updateError.message || "Failed to set password.");
         return;
       }
       
@@ -156,5 +162,13 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
         )}
       </Card>
     </div>
+  );
+}
+
+export default function InvitePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div></div>}>
+      <InviteForm />
+    </Suspense>
   );
 }

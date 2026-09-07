@@ -1,5 +1,5 @@
 "use client";
-import { MockPortalService } from "@/services/mockPortalService";
+import { PortalService } from "@/services/portalService";
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
@@ -16,7 +16,7 @@ export default function RaiseConcernPage() {
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({ subject: "", description: "", isAnonymous: false });
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<any>) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setFormData({ ...formData, [e.target.name]: value });
   };
@@ -32,7 +32,7 @@ export default function RaiseConcernPage() {
     setIsLoading(true);
     
     try {
-      const res = await MockPortalService.submitConcern(formData);
+      const res = await PortalService.submitConcern(formData);
       if (!res.success) {
         setError("Failed to raise concern");
         return;

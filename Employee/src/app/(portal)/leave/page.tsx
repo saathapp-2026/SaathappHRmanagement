@@ -1,5 +1,5 @@
 "use client";
-import { MockPortalService } from "@/services/mockPortalService";
+import { PortalService } from "@/services/portalService";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,16 +16,16 @@ export default function LeavePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const balData = await MockPortalService.getLeaveBalances();
-        const histData = await MockPortalService.getLeaveHistory();
+        const balData = await PortalService.getLeaveBalances();
+        const histData = await PortalService.getLeaveHistory();
         
         if (balData) {
           // Map balances to array format expected by component
-          const arr = [
-            { leaveType: "Casual Leave", total: 12, used: 12 - balData.casual },
-            { leaveType: "Sick Leave", total: 5, used: 5 - balData.sick },
-            { leaveType: "Earned Leave", total: 10, used: 10 - balData.annual }
-          ];
+          const arr: { leaveType: string; total: number; used: number; }[] = balData.map((b: any) => ({
+            leaveType: b.leave_types?.name || 'Unknown',
+            total: b.allocated,
+            used: b.used + (b.pending || 0)
+          }));
           setBalances(arr);
         }
         if (histData) setHistory(histData.map(h => ({ leaveType: h.type, startDate: h.startDate, endDate: h.endDate, status: h.status })));
