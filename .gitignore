@@ -11,18 +11,20 @@ lerna-debug.log*
 .DS_Store
 Thumbs.db
 
-# Portal Exclusions (Admin, Employee, Manager)
+# Global Exclusions for all portals (Admin, Employee, Manager, HR)
 **/node_modules
 **/dist
 **/.env
 **/.env.local
 **/.vercel
+**/.next
 
 node_modules/
 dist/
 .env
 .env.local
 .vercel/
+.next/
 
 Admin/node_modules
 Admin/dist
@@ -41,3 +43,10 @@ Manager/dist
 Manager/.env
 Manager/.env.local
 Manager/.vercel
+
+HR/node_modules
+HR/.next
+HR/dist
+HR/.env
+HR/.env.local
+HR/.vercel

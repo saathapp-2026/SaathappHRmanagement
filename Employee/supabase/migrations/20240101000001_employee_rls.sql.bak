@@ -1,0 +1,224 @@
+-- ========================================================================================
+-- Phase 1C: Supabase Row Level Security (RLS) & Employee Data Isolation
+-- ========================================================================================
+
+-- 1. Helper Functions for Ownership & Account Status
+-- SECURITY DEFINER is used to bypass RLS when querying the profile itself,
+-- but the search_path is strictly set to public to prevent hijacking.
+CREATE OR REPLACE FUNCTION public.current_employee_id()
+RETURNS UUID
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT id FROM employee_profiles WHERE user_id = auth.uid() LIMIT 1;
+$$;
+
+CREATE OR REPLACE FUNCTION public.current_employee_account_status()
+RETURNS TEXT
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT account_status FROM employee_profiles WHERE user_id = auth.uid() LIMIT 1;
+$$;
+
+-- Revoke default public execute permissions and restrict to authenticated users
+REVOKE EXECUTE ON FUNCTION public.current_employee_id() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.current_employee_id() TO authenticated;
+
+REVOKE EXECUTE ON FUNCTION public.current_employee_account_status() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.current_employee_account_status() TO authenticated;
+
+
+-- 2. Enable RLS on all employee-sensitive and reference tables
+ALTER TABLE employee_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE employee_invitations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE attendance_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE attendance_corrections ENABLE ROW LEVEL SECURITY;
+ALTER TABLE employee_leave_balances ENABLE ROW LEVEL SECURITY;
+ALTER TABLE leave_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE concerns ENABLE ROW LEVEL SECURITY;
+ALTER TABLE concern_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE help_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE help_request_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE employee_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profile_change_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE announcement_reads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE employee_notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE employee_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE calendar_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE announcements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE attendance_policies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE departments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE designations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE work_locations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE leave_types ENABLE ROW LEVEL SECURITY;
+
+
+-- 3. Core Employee Data Policies (SELECT own data)
+
+-- Employee Profiles: Employees can only SELECT their own profile.
+CREATE POLICY "Employee can view own profile" 
+ON employee_profiles FOR SELECT TO authenticated
+USING (user_id = auth.uid());
+
+-- Attendance Records: SELECT own only.
+CREATE POLICY "Employee can view own attendance" 
+ON attendance_records FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Attendance Corrections: SELECT own only.
+CREATE POLICY "Employee can view own attendance corrections" 
+ON attendance_corrections FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Leave Balances: SELECT own only.
+CREATE POLICY "Employee can view own leave balances" 
+ON employee_leave_balances FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Leave Requests: SELECT own only.
+CREATE POLICY "Employee can view own leave requests" 
+ON leave_requests FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Employee Documents: SELECT own metadata only.
+CREATE POLICY "Employee can view own documents" 
+ON employee_documents FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Profile Change Requests: SELECT own only.
+CREATE POLICY "Employee can view own profile change requests" 
+ON profile_change_requests FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Employee Notifications: SELECT own only.
+CREATE POLICY "Employee can view own notifications" 
+ON employee_notifications FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Employee Sessions: SELECT own only.
+CREATE POLICY "Employee can view own sessions" 
+ON employee_sessions FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Employee Invitations: No SELECT policy for authenticated role. Token hashes are never exposed.
+
+
+-- 4. Concerns & Help Requests (With isolated messages)
+
+-- Concerns: SELECT own only.
+CREATE POLICY "Employee can view own concerns" 
+ON concerns FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Concern Messages: SELECT own AND visibility='employee_visible'
+CREATE POLICY "Employee can view own visible concern messages" 
+ON concern_messages FOR SELECT TO authenticated
+USING (
+    visibility = 'employee_visible' 
+    AND concern_id IN (
+        SELECT id FROM concerns WHERE employee_id = public.current_employee_id()
+    )
+);
+
+-- Concern Messages: INSERT only if visibility='employee_visible' to own concern
+CREATE POLICY "Employee can reply to own concerns" 
+ON concern_messages FOR INSERT TO authenticated
+WITH CHECK (
+    visibility = 'employee_visible' 
+    AND author_user_id = auth.uid()
+    AND concern_id IN (
+        SELECT id FROM concerns WHERE employee_id = public.current_employee_id()
+    )
+);
+
+-- Help Requests: SELECT own only.
+CREATE POLICY "Employee can view own help requests" 
+ON help_requests FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+-- Help Request Messages: SELECT own AND visibility='employee_visible'
+CREATE POLICY "Employee can view own visible help messages" 
+ON help_request_messages FOR SELECT TO authenticated
+USING (
+    visibility = 'employee_visible' 
+    AND help_request_id IN (
+        SELECT id FROM help_requests WHERE employee_id = public.current_employee_id()
+    )
+);
+
+-- Help Request Messages: INSERT only if visibility='employee_visible' to own help request
+CREATE POLICY "Employee can reply to own help requests" 
+ON help_request_messages FOR INSERT TO authenticated
+WITH CHECK (
+    visibility = 'employee_visible' 
+    AND author_user_id = auth.uid()
+    AND help_request_id IN (
+        SELECT id FROM help_requests WHERE employee_id = public.current_employee_id()
+    )
+);
+
+
+-- 5. Announcements & Calendar Events (Audience Targeting)
+
+-- Announcements: Only view if intended for the employee
+CREATE POLICY "Employee can view targeted announcements" 
+ON announcements FOR SELECT TO authenticated
+USING (
+    audience_type = 'everyone' OR
+    EXISTS (
+        SELECT 1 FROM employee_profiles ep 
+        WHERE ep.user_id = auth.uid() AND (
+            (announcements.audience_type = 'department' AND announcements.audience_reference = ep.department_id::text) OR
+            (announcements.audience_type = 'location' AND announcements.audience_reference = ep.work_location_id::text) OR
+            (announcements.audience_type = 'designation' AND announcements.audience_reference = ep.designation_id::text) OR
+            (announcements.audience_type = 'employee' AND announcements.audience_reference = ep.id::text)
+        )
+    )
+);
+
+-- Announcement Reads: SELECT own, INSERT own, UPDATE own
+CREATE POLICY "Employee can view own announcement reads" 
+ON announcement_reads FOR SELECT TO authenticated
+USING (employee_id = public.current_employee_id());
+
+CREATE POLICY "Employee can mark announcements as read" 
+ON announcement_reads FOR INSERT TO authenticated
+WITH CHECK (employee_id = public.current_employee_id());
+
+CREATE POLICY "Employee can update own announcement reads" 
+ON announcement_reads FOR UPDATE TO authenticated
+USING (employee_id = public.current_employee_id())
+WITH CHECK (employee_id = public.current_employee_id());
+
+-- Calendar Events: Only view if intended for the employee
+CREATE POLICY "Employee can view targeted calendar events" 
+ON calendar_events FOR SELECT TO authenticated
+USING (
+    audience_type = 'everyone' OR
+    EXISTS (
+        SELECT 1 FROM employee_profiles ep 
+        WHERE ep.user_id = auth.uid() AND (
+            (calendar_events.audience_type = 'department' AND calendar_events.audience_reference = ep.department_id::text) OR
+            (calendar_events.audience_type = 'location' AND calendar_events.audience_reference = ep.work_location_id::text) OR
+            (calendar_events.audience_type = 'designation' AND calendar_events.audience_reference = ep.designation_id::text) OR
+            (calendar_events.audience_type = 'employee' AND calendar_events.audience_reference = ep.id::text)
+        )
+    )
+);
+
+
+-- 6. Reference Tables (Read-only access for active records)
+
+CREATE POLICY "Employees can view active departments" ON departments FOR SELECT TO authenticated USING (active = true);
+CREATE POLICY "Employees can view active designations" ON designations FOR SELECT TO authenticated USING (active = true);
+CREATE POLICY "Employees can view active work locations" ON work_locations FOR SELECT TO authenticated USING (active = true);
+CREATE POLICY "Employees can view active leave types" ON leave_types FOR SELECT TO authenticated USING (active = true);
+CREATE POLICY "Employees can view active attendance policies" ON attendance_policies FOR SELECT TO authenticated USING (active = true);
+
+-- Note: All INSERT, UPDATE, DELETE permissions for the above tables are implicitly denied (No policies created for them).
+-- Complex workflows (like Attendance Check-in, Leave Application) are deliberately deferred to trusted RPC functions to ensure full column-level security.
