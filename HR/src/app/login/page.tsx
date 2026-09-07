@@ -41,7 +41,7 @@ export default function LoginPage() {
         setError(signInError.message || "Invalid credentials. Please try again.");
       } else if (data.session) {
         // Will be redirected by AuthGuard or can explicitly push
-        router.push("/dashboard");
+        router.push("/hr/dashboard");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");

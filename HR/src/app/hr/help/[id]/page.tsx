@@ -10,15 +10,7 @@ export default function HelpDetailPage() {
   const requestId = params?.id as string;
   const req = mockHelpRequests.find(r => r.id === requestId);
 
-  if (!req) return (
-    <div className="p-12 text-center text-gray-500 space-y-4">
-      <h2 className="text-xl font-bold text-gray-900">Help Request Not Found</h2>
-      <p>The help request you are looking for does not exist.</p>
-      <Link href="/hr/help" className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
-        Back to Help Requests
-      </Link>
-    </div>
-  );
+  if (!req) return <div className="p-8 text-center text-gray-500">Ticket not found.</div>;
 
   return (
     <div className="pb-12 bg-slate-50/30 min-h-screen -mx-6 -my-6">

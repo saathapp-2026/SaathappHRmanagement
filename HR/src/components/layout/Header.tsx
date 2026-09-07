@@ -8,7 +8,7 @@ import { notificationsService } from "@/services/employee/notifications.service"
 import { profileService } from "@/services/employee/profile.service";
 
 const routeTitles: Record<string, string> = {
-  "/dashboard": "Dashboard",
+  "/hr/dashboard": "Dashboard",
   "/attendance": "Attendance",
   "/attendance/correction": "Attendance Correction",
   "/leave": "Leave",
@@ -61,7 +61,7 @@ export default function Header() {
   const accountStatus = profile?.account_status ? profile.account_status.replace('_', ' ') : "Loading...";
 
   let pageTitle = "Employee Portal";
-  if (pathname === "/dashboard") {
+  if (pathname === "/hr/dashboard") {
     pageTitle = isLoading ? "Welcome!" : `Welcome, ${firstName}!`;
   } else if (routeTitles[pathname]) {
     pageTitle = routeTitles[pathname];

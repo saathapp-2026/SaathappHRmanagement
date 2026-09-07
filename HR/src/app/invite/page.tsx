@@ -71,7 +71,7 @@ function InviteForm() {
       
       setSuccess(true);
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/hr/dashboard");
       }, 2000);
     } catch (err) {
       setError("An unexpected error occurred.");

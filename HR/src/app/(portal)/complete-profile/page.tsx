@@ -74,7 +74,7 @@ export default function CompleteProfilePage() {
       });
 
       // Force refresh to update layout state and redirect
-      router.push("/dashboard");
+      router.push("/hr/dashboard");
     } catch (err: any) {
        
       const e = err as {message?: string};

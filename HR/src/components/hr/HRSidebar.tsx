@@ -60,7 +60,7 @@ export function HRSidebar({ mobileOpen, setMobileOpen }: HRSidebarProps) {
       title: 'EMPLOYEE SERVICES',
       items: [
         { name: 'Concerns', icon: MessageSquareWarning, href: '/hr/concerns' },
-        { name: 'Help Requests', icon: HelpCircle, href: '/hr/help' },
+        { name: 'Help Requests', icon: HelpCircle, href: '/hr/help-requests' },
         { name: 'Profile Requests', icon: UserCog, href: '/hr/profile-requests' },
         { name: 'Documents', icon: FileText, href: '/hr/documents' },
       ]

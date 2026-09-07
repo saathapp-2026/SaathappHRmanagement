@@ -37,7 +37,7 @@ export default function SignupPage() {
       if (res.error) {
         setError(res.error.message || "Failed to create account");
       } else {
-        router.push("/dashboard");
+        router.push("/hr/dashboard");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
