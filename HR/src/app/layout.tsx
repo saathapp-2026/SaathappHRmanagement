@@ -3,7 +3,7 @@ import "./globals.css";
 import AuthGuard from "@/components/layout/AuthGuard";
 
 export const metadata: Metadata = {
-  title: "Employee Portal",
+  title: "HR Portal",
   description: "Employee HR Management Portal",
 };
 

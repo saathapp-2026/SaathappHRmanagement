@@ -60,7 +60,7 @@ export default function Header() {
   const initial = employeeName.charAt(0).toUpperCase();
   const accountStatus = profile?.account_status ? profile.account_status.replace('_', ' ') : "Loading...";
 
-  let pageTitle = "Employee Portal";
+  let pageTitle = "HR Portal";
   if (pathname === "/hr/dashboard") {
     pageTitle = isLoading ? "Welcome!" : `Welcome, ${firstName}!`;
   } else if (routeTitles[pathname]) {
