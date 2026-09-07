@@ -1,5 +1,6 @@
 import React from 'react';
-import { Edit2, Eye, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { Edit2, Eye, UserX } from 'lucide-react';
 
 export function EmployeeTable() {
   const employees = [
@@ -113,7 +114,7 @@ export function EmployeeTable() {
                       {emp.avatar}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">{emp.name}</div>
+                      <Link href={`/hr/employees/${emp.id}`} className="font-semibold text-gray-900 hover:text-indigo-600 transition-colors">{emp.name}</Link>
                       <div className="text-sm text-gray-500">{emp.email}</div>
                     </div>
                   </div>
@@ -134,14 +135,14 @@ export function EmployeeTable() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors tooltip-trigger" title="View Profile">
+                    <Link href={`/hr/employees/${emp.id}`} className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors" title="View Profile">
                       <Eye size={18} />
-                    </button>
+                    </Link>
                     <button className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors" title="Edit">
                       <Edit2 size={18} />
                     </button>
-                    <button className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors" title="Delete">
-                      <Trash2 size={18} />
+                    <button className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors" title="Deactivate / Start Offboarding">
+                      <UserX size={18} />
                     </button>
                   </div>
                 </td>

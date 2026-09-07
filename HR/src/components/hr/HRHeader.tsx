@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Search, Bell, HelpCircle, Menu, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
 
 export function HRHeader({ setMobileOpen }: { setMobileOpen: (v: boolean) => void }) {
   const [showProfileDrop, setShowProfileDrop] = useState(false);
   const [showNotificationDrop, setShowNotificationDrop] = useState(false);
+  const unreadCount = 4; // Mock count
 
   return (
     <header className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sticky top-0 z-30">
@@ -47,12 +49,40 @@ export function HRHeader({ setMobileOpen }: { setMobileOpen: (v: boolean) => voi
               }}
             >
               <Bell size={20} />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-red-500 border-2 border-white rounded-full text-[10px] text-white font-bold">
+                  {unreadCount}
+                </span>
+              )}
             </button>
             {showNotificationDrop && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
-                <div className="px-4 py-2 border-b border-gray-50 font-semibold text-sm text-gray-800">Notifications</div>
-                <div className="px-4 py-3 text-sm text-gray-500 text-center">No new notifications</div>
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between">
+                  <span className="font-semibold text-sm text-gray-800">Notifications</span>
+                </div>
+                <div className="max-h-64 overflow-y-auto divide-y divide-gray-50">
+                  <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors bg-blue-50/30">
+                    <p className="text-sm font-medium text-gray-900">Attendance Correction Submitted</p>
+                    <p className="text-xs text-gray-500 mt-1">10 min ago</p>
+                  </div>
+                  <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors bg-blue-50/30">
+                    <p className="text-sm font-medium text-gray-900">New Concern Raised</p>
+                    <p className="text-xs text-gray-500 mt-1">25 min ago</p>
+                  </div>
+                  <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors bg-blue-50/30">
+                    <p className="text-sm font-medium text-gray-900">Profile Change Request</p>
+                    <p className="text-xs text-gray-500 mt-1">42 min ago</p>
+                  </div>
+                  <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors">
+                    <p className="text-sm font-medium text-gray-900">Document Expiring</p>
+                    <p className="text-xs text-gray-500 mt-1">2h ago</p>
+                  </div>
+                </div>
+                <div className="border-t border-gray-50 mt-1 px-4 py-2">
+                  <Link href="/hr/notifications" className="block text-center text-sm font-medium text-indigo-600 hover:text-indigo-800 py-1" onClick={() => setShowNotificationDrop(false)}>
+                    View All Notifications
+                  </Link>
+                </div>
               </div>
             )}
           </div>

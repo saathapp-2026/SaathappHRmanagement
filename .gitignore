@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # OS Files
 .DS_Store
+<<<<<<< HEAD
 Thumbs.db
 
 # Global Exclusions for all portals (Admin, Employee, Manager, HR)
@@ -50,3 +51,37 @@ HR/dist
 HR/.env
 HR/.env.local
 HR/.vercel
+=======
+.vercel
+
+# Protected directories and files
+node_modules/
+.next/
+dist/
+build/
+.env
+.env.local
+.env.production
+.env.development.local
+*.log
+
+# HR specifics
+HR/node_modules/
+HR/.next/
+HR/dist/
+HR/build/
+HR/.env
+HR/.env.local
+HR/.env.production
+HR/.env.development.local
+
+# Employee specifics
+Employee/node_modules/
+Employee/.next/
+Employee/dist/
+Employee/build/
+Employee/.env
+Employee/.env.local
+Employee/.env.production
+Employee/.env.development.local
+>>>>>>> 4dc1b396 (Update complete SaathApp HR portal)

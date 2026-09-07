@@ -1,4 +1,8 @@
+'use client';
+
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, Users, UserPlus, Network, ClipboardCheck, 
   Clock, CheckCircle, CalendarOff, Calendar, 
@@ -16,7 +20,7 @@ interface HRSidebarProps {
 type NavItem = {
   name: string;
   icon: LucideIcon;
-  active?: boolean;
+  href: string;
 };
 
 type NavGroup = {
@@ -25,69 +29,70 @@ type NavGroup = {
 };
 
 export function HRSidebar({ mobileOpen, setMobileOpen }: HRSidebarProps) {
+  const pathname = usePathname();
+
   const navGroups: NavGroup[] = [
     {
       title: '',
       items: [
-        { name: 'Dashboard', icon: LayoutDashboard, active: true },
+        { name: 'Dashboard', icon: LayoutDashboard, href: '/hr/dashboard' },
       ]
     },
     {
       title: 'PEOPLE',
       items: [
-        { name: 'Employees', icon: Users },
-        { name: 'Onboarding', icon: UserPlus },
-        { name: 'Organization', icon: Network },
-        { name: 'Probation', icon: ClipboardCheck },
+        { name: 'Employees', icon: Users, href: '/hr/employees' },
+        { name: 'Onboarding', icon: UserPlus, href: '/hr/onboarding' },
+        { name: 'Organization', icon: Network, href: '/hr/organization' },
+        { name: 'Probation', icon: ClipboardCheck, href: '/hr/probation' },
       ]
     },
     {
       title: 'TIME & ATTENDANCE',
       items: [
-        { name: 'Attendance', icon: Clock },
-        { name: 'Corrections', icon: CheckCircle },
-        { name: 'Leave', icon: CalendarOff },
-        { name: 'Calendar', icon: Calendar },
+        { name: 'Attendance', icon: Clock, href: '/hr/attendance' },
+        { name: 'Corrections', icon: CheckCircle, href: '/hr/corrections' },
+        { name: 'Leave', icon: CalendarOff, href: '/hr/leave' },
+        { name: 'Calendar', icon: Calendar, href: '/hr/calendar' },
       ]
     },
     {
       title: 'EMPLOYEE SERVICES',
       items: [
-        { name: 'Concerns', icon: MessageSquareWarning },
-        { name: 'Help Requests', icon: HelpCircle },
-        { name: 'Profile Requests', icon: UserCog },
-        { name: 'Documents', icon: FileText },
+        { name: 'Concerns', icon: MessageSquareWarning, href: '/hr/concerns' },
+        { name: 'Help Requests', icon: HelpCircle, href: '/hr/help' },
+        { name: 'Profile Requests', icon: UserCog, href: '/hr/profile-requests' },
+        { name: 'Documents', icon: FileText, href: '/hr/documents' },
       ]
     },
     {
       title: 'HR OPERATIONS',
       items: [
-        { name: 'Payroll', icon: DollarSign },
-        { name: 'Performance', icon: TrendingUp },
-        { name: 'Recruitment', icon: Briefcase },
-        { name: 'Offboarding', icon: UserMinus },
-        { name: 'Assets', icon: Monitor },
+        { name: 'Payroll', icon: DollarSign, href: '/hr/payroll' },
+        { name: 'Performance', icon: TrendingUp, href: '/hr/performance' },
+        { name: 'Recruitment', icon: Briefcase, href: '/hr/recruitment' },
+        { name: 'Offboarding', icon: UserMinus, href: '/hr/offboarding' },
+        { name: 'Assets', icon: Monitor, href: '/hr/assets' },
       ]
     },
     {
       title: 'COMMUNICATION',
       items: [
-        { name: 'Announcements', icon: Megaphone },
-        { name: 'Notifications', icon: Bell },
+        { name: 'Announcements', icon: Megaphone, href: '/hr/announcements' },
+        { name: 'Notifications', icon: Bell, href: '/hr/notifications' },
       ]
     },
     {
       title: 'INSIGHTS',
       items: [
-        { name: 'Reports', icon: PieChart },
-        { name: 'Analytics', icon: BarChart2 },
+        { name: 'Reports & Analytics', icon: PieChart, href: '/hr/reports' },
       ]
     },
     {
       title: 'SYSTEM',
       items: [
-        { name: 'Audit Logs', icon: Shield },
-        { name: 'HR Settings', icon: Settings },
+        { name: 'Audit Logs', icon: Shield, href: '/hr/audit-logs' },
+        { name: 'HR Settings', icon: Settings, href: '/hr/settings' },
       ]
     }
   ];
@@ -120,19 +125,24 @@ export function HRSidebar({ mobileOpen, setMobileOpen }: HRSidebarProps) {
                 </h3>
               )}
               <div className="space-y-1">
-                {group.items.map((item, iIdx) => (
-                  <button
-                    key={iIdx}
-                    className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      item.active 
-                        ? 'bg-indigo-50 text-indigo-700' 
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
-                  >
-                    <item.icon size={18} className={`mr-3 ${item.active ? 'text-indigo-700' : 'text-gray-400'}`} />
-                    {item.name}
-                  </button>
-                ))}
+                {group.items.map((item, iIdx) => {
+                  const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                  return (
+                    <Link
+                      key={iIdx}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                        isActive 
+                          ? 'bg-indigo-50 text-indigo-700' 
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      }`}
+                    >
+                      <item.icon size={18} className={`mr-3 ${isActive ? 'text-indigo-700' : 'text-gray-400'}`} />
+                      {item.name}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}
