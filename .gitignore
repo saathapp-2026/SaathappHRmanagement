@@ -3,3 +3,5 @@ Admin/node_modules
 Admin/dist 
 Admin/.env 
 Admin/.env.local 
+.DS_Store
+.vercel

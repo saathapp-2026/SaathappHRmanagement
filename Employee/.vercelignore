@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.turbo
+coverage
+dist
+build
+*.log
+*.bak
+.DS_Store
+.env
+.env.local
+.env.*.local
+.flutter-sdk
+saath_hr_app
+test-results
+playwright-report
