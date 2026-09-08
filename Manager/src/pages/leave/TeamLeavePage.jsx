@@ -97,7 +97,7 @@ export const TeamLeavePage = () => {
                 {/* Overlap Warning Box */}
                 <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
-                  <span>⚠ 2 other team members (Sneha Iyer, Vikram Singh) are already on leave during these requested dates.</span>
+                  <span>⚠ Other team members are on leave during these requested dates.</span>
                 </div>
 
                 <p className="text-xs text-slate-600">
@@ -124,30 +124,22 @@ export const TeamLeavePage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-bold text-slate-700">
-                <tr>
-                  <td className="px-4 py-3 text-left">Anjali Mehta</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                  <td className="px-4 py-3 text-amber-600 bg-amber-50 rounded-lg">L</td>
-                  <td className="px-4 py-3 text-amber-600 bg-amber-50 rounded-lg">L</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-left">Rahul Das</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-left">Sneha Iyer</td>
-                  <td className="px-4 py-3 text-amber-600 bg-amber-50 rounded-lg">L</td>
-                  <td className="px-4 py-3 text-amber-600 bg-amber-50 rounded-lg">L</td>
-                  <td className="px-4 py-3 text-amber-600 bg-amber-50 rounded-lg">L</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                  <td className="px-4 py-3 text-emerald-600">✓</td>
-                </tr>
+                {teamMembers.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-slate-400 font-normal">No team members registered.</td>
+                  </tr>
+                ) : (
+                  teamMembers.map(m => (
+                    <tr key={m.id}>
+                      <td className="px-4 py-3 text-left">{m.fullName}</td>
+                      <td className="px-4 py-3 text-emerald-600">✓</td>
+                      <td className="px-4 py-3 text-emerald-600">✓</td>
+                      <td className="px-4 py-3 text-emerald-600">✓</td>
+                      <td className="px-4 py-3 text-emerald-600">✓</td>
+                      <td className="px-4 py-3 text-emerald-600">✓</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

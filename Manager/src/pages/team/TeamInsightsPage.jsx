@@ -3,7 +3,20 @@ import { useHR } from '../../context/HRContext';
 import { BarChart3, TrendingUp, Users, Calendar, Award, ShieldAlert } from 'lucide-react';
 
 export const TeamInsightsPage = () => {
-  const { teamMembers, dailyAttendance } = useHR();
+  const { teamMembers, dailyAttendance, leaveRequests, probationReviews, offboardingRequests, performanceReviews } = useHR();
+
+  const officeCount = dailyAttendance.filter(a => a.location !== 'Remote' && a.status === 'Present').length;
+  const remoteCount = dailyAttendance.filter(a => a.location === 'Remote' || a.status === 'Work From Home').length;
+  const leaveCount = leaveRequests.filter(l => l.status === 'Approved').length;
+
+  const outstandingCount = performanceReviews.filter(r => r.overallRating >= 4.5).length;
+  const exceedsCount = performanceReviews.filter(r => r.overallRating >= 4.0 && r.overallRating < 4.5).length;
+  const meetsCount = performanceReviews.filter(r => r.overallRating >= 3.0 && r.overallRating < 4.0).length;
+  const needsImpCount = performanceReviews.filter(r => r.overallRating < 3.0).length;
+
+  const activeCount = teamMembers.filter(m => m.accountStatus === 'Active' || !m.accountStatus).length;
+  const inProbationCount = probationReviews.filter(p => p.status !== 'Completed').length;
+  const noticePeriodCount = offboardingRequests.filter(o => o.status !== 'Completed').length;
 
   return (
     <div className="space-y-6 animate-fade-in pb-12">
@@ -35,37 +48,37 @@ export const TeamInsightsPage = () => {
             <div>
               <div className="flex justify-between text-slate-600 mb-1 font-bold">
                 <span>Present</span>
-                <span>72%</span>
+                <span>{dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'Present').length / dailyAttendance.length) * 100) : 0}%</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2">
-                <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '72%' }} />
+                <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'Present').length / dailyAttendance.length) * 100) : 0}%` }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between text-slate-600 mb-1 font-bold">
                 <span>Late Arrivals</span>
-                <span>11%</span>
+                <span>{dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'Late').length / dailyAttendance.length) * 100) : 0}%</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2">
-                <div className="bg-orange-500 h-2 rounded-full" style={{ width: '11%' }} />
+                <div className="bg-orange-500 h-2 rounded-full" style={{ width: `${dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'Late').length / dailyAttendance.length) * 100) : 0}%` }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between text-slate-600 mb-1 font-bold">
                 <span>On Leave</span>
-                <span>11%</span>
+                <span>{dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'On Leave').length / dailyAttendance.length) * 100) : 0}%</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2">
-                <div className="bg-amber-500 h-2 rounded-full" style={{ width: '11%' }} />
+                <div className="bg-amber-500 h-2 rounded-full" style={{ width: `${dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'On Leave').length / dailyAttendance.length) * 100) : 0}%` }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between text-slate-600 mb-1 font-bold">
                 <span>Absent</span>
-                <span>6%</span>
+                <span>{dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'Absent').length / dailyAttendance.length) * 100) : 0}%</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-2">
-                <div className="bg-rose-500 h-2 rounded-full" style={{ width: '6%' }} />
+                <div className="bg-rose-500 h-2 rounded-full" style={{ width: `${dailyAttendance.length > 0 ? Math.round((dailyAttendance.filter(a => a.status === 'Absent').length / dailyAttendance.length) * 100) : 0}%` }} />
               </div>
             </div>
           </div>
@@ -80,15 +93,15 @@ export const TeamInsightsPage = () => {
           <div className="grid grid-cols-3 gap-3 text-center text-xs">
             <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
               <span className="text-[10px] font-bold text-emerald-600 uppercase">Office</span>
-              <p className="text-xl font-black text-emerald-700 mt-1">12</p>
+              <p className="text-xl font-black text-emerald-700 mt-1">{officeCount}</p>
             </div>
             <div className="p-3 rounded-2xl bg-purple-50 border border-purple-100">
               <span className="text-[10px] font-bold text-purple-600 uppercase">Remote</span>
-              <p className="text-xl font-black text-purple-700 mt-1">4</p>
+              <p className="text-xl font-black text-purple-700 mt-1">{remoteCount}</p>
             </div>
             <div className="p-3 rounded-2xl bg-amber-50 border border-amber-100">
               <span className="text-[10px] font-bold text-amber-600 uppercase">Leave</span>
-              <p className="text-xl font-black text-amber-700 mt-1">2</p>
+              <p className="text-xl font-black text-amber-700 mt-1">{leaveCount}</p>
             </div>
           </div>
         </div>
@@ -102,19 +115,19 @@ export const TeamInsightsPage = () => {
           <div className="space-y-2 text-xs font-medium">
             <div className="flex justify-between p-2 rounded-xl bg-purple-50 text-purple-900">
               <span>Outstanding</span>
-              <span className="font-extrabold">3 Employees</span>
+              <span className="font-extrabold">{outstandingCount} Employees</span>
             </div>
             <div className="flex justify-between p-2 rounded-xl bg-emerald-50 text-emerald-900">
               <span>Exceeds Expectations</span>
-              <span className="font-extrabold">5 Employees</span>
+              <span className="font-extrabold">{exceedsCount} Employees</span>
             </div>
             <div className="flex justify-between p-2 rounded-xl bg-slate-50 text-slate-800">
               <span>Meets Expectations</span>
-              <span className="font-extrabold">8 Employees</span>
+              <span className="font-extrabold">{meetsCount} Employees</span>
             </div>
             <div className="flex justify-between p-2 rounded-xl bg-amber-50 text-amber-900">
               <span>Needs Improvement</span>
-              <span className="font-extrabold">2 Employees</span>
+              <span className="font-extrabold">{needsImpCount} Employees</span>
             </div>
           </div>
         </div>
@@ -129,19 +142,19 @@ export const TeamInsightsPage = () => {
             </div>
             <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
               <span className="text-[10px] font-bold text-emerald-600 uppercase">Active</span>
-              <p className="text-2xl font-black text-emerald-700 mt-1">{teamMembers.length}</p>
+              <p className="text-2xl font-black text-emerald-700 mt-1">{activeCount}</p>
             </div>
             <div className="p-4 rounded-2xl bg-purple-50 border border-purple-100">
               <span className="text-[10px] font-bold text-purple-600 uppercase">New Joiners</span>
-              <p className="text-2xl font-black text-purple-700 mt-1">2</p>
+              <p className="text-2xl font-black text-purple-700 mt-1">0</p>
             </div>
             <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100">
               <span className="text-[10px] font-bold text-amber-600 uppercase">In Probation</span>
-              <p className="text-2xl font-black text-amber-700 mt-1">3</p>
+              <p className="text-2xl font-black text-amber-700 mt-1">{inProbationCount}</p>
             </div>
             <div className="p-4 rounded-2xl bg-rose-50 border border-rose-100">
               <span className="text-[10px] font-bold text-rose-600 uppercase">Notice Period</span>
-              <p className="text-2xl font-black text-rose-700 mt-1">1</p>
+              <p className="text-2xl font-black text-rose-700 mt-1">{noticePeriodCount}</p>
             </div>
           </div>
         </div>

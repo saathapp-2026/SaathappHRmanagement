@@ -3,11 +3,11 @@ import { useHR } from '../../context/HRContext';
 import { Laptop, Plus, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 
 export const RemoteWorkPage = () => {
-  const { remoteWorkRequests, approveRemoteWork, rejectRemoteWork, addRemoteWorkRequest } = useHR();
+  const { remoteWorkRequests, approveRemoteWork, rejectRemoteWork, addRemoteWorkRequest, currentUser, teamMembers, leaveRequests } = useHR();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [form, setForm] = useState({
-    employeeName: 'Neha Gupta',
+    employeeName: currentUser?.fullName || '',
     requestedDates: new Date().toISOString().split('T')[0],
     reason: '',
     location: 'Bengaluru Residence'
@@ -17,7 +17,7 @@ export const RemoteWorkPage = () => {
     e.preventDefault();
     if (form.reason.trim()) {
       addRemoteWorkRequest(form);
-      setForm({ employeeName: 'Neha Gupta', requestedDates: new Date().toISOString().split('T')[0], reason: '', location: 'Bengaluru Residence' });
+      setForm({ employeeName: currentUser?.fullName || '', requestedDates: new Date().toISOString().split('T')[0], reason: '', location: 'Bengaluru Residence' });
       setIsAddModalOpen(false);
     }
   };
@@ -45,15 +45,15 @@ export const RemoteWorkPage = () => {
       <div className="grid grid-cols-3 gap-4 text-center">
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
           <span className="text-[10px] font-bold text-emerald-600 uppercase">Working Office</span>
-          <p className="text-2xl font-black text-emerald-700 mt-1">12</p>
+          <p className="text-2xl font-black text-emerald-700 mt-1">{teamMembers.length}</p>
         </div>
         <div className="p-4 rounded-2xl bg-purple-50 border border-purple-100">
           <span className="text-[10px] font-bold text-purple-600 uppercase">Working Remote</span>
-          <p className="text-2xl font-black text-purple-700 mt-1">4</p>
+          <p className="text-2xl font-black text-purple-700 mt-1">{remoteWorkRequests.filter(r => r.status === 'Approved').length}</p>
         </div>
         <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100">
           <span className="text-[10px] font-bold text-amber-600 uppercase">On Leave</span>
-          <p className="text-2xl font-black text-amber-700 mt-1">2</p>
+          <p className="text-2xl font-black text-amber-700 mt-1">{leaveRequests.filter(l => l.status === 'Approved').length}</p>
         </div>
       </div>
 

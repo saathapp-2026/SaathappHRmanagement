@@ -89,7 +89,7 @@ export const EmployeesPage = () => {
       ...newEmpForm,
       departmentName: deptObj?.name || 'General',
       designationName: desigObj?.name || 'Executive',
-      reportingManagerName: managerObj?.fullName || 'Rajesh Sharma'
+      reportingManagerName: managerObj?.fullName || 'Rohit Mehta'
     });
 
     setIsAddModalOpen(false);

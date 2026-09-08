@@ -36,6 +36,7 @@ export const ManagerDashboardPage = () => {
     probationReviews,
     announcements,
     notifications,
+    calendarEvents,
     approveLeaveRequest,
     rejectLeaveRequest,
     approveCorrection,
@@ -348,29 +349,20 @@ export const ManagerDashboardPage = () => {
           <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-4">
             <h3 className="text-sm font-extrabold text-slate-900">Team Members on Leave Today</h3>
             <div className="divide-y divide-slate-100">
-              <div className="py-2.5 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3">
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80" alt="" className="h-8 w-8 rounded-full object-cover" />
-                  <div>
-                    <p className="font-bold text-slate-800">Sneha Iyer</p>
-                    <p className="text-[10px] text-slate-400">Earned Leave</p>
+              {leaveRequests.filter(l => l.status === 'Approved').length === 0 ? (
+                <p className="py-4 text-center text-xs text-slate-400 font-medium">No team members on leave today.</p>
+              ) : (
+                leaveRequests.filter(l => l.status === 'Approved').map(l => (
+                  <div key={l.id} className="py-2.5 flex items-center justify-between text-xs">
+                    <div>
+                      <p className="font-bold text-slate-800">{l.employeeName}</p>
+                      <p className="text-[10px] text-slate-400">{l.leaveType}</p>
+                    </div>
+                    <span className="text-slate-500 font-medium">{l.startDate} - {l.endDate}</span>
+                    <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Approved</span>
                   </div>
-                </div>
-                <span className="text-slate-500 font-medium">10 Jun - 12 Jun</span>
-                <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Returns 13 Jun</span>
-              </div>
-
-              <div className="py-2.5 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3">
-                  <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80" alt="" className="h-8 w-8 rounded-full object-cover" />
-                  <div>
-                    <p className="font-bold text-slate-800">Vikram Singh</p>
-                    <p className="text-[10px] text-slate-400">Sick Leave</p>
-                  </div>
-                </div>
-                <span className="text-slate-500 font-medium">9 Jun - 11 Jun</span>
-                <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Returns 12 Jun</span>
-              </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -380,30 +372,21 @@ export const ManagerDashboardPage = () => {
           {/* Upcoming Birthdays & Work Anniversaries */}
           <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-4">
             <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-              <Gift className="h-4 w-4 text-saath-600" /> Upcoming Birthdays & Anniversaries
+              <Gift className="h-4 w-4 text-saath-600" /> Upcoming Events & Birthdays
             </h3>
             <div className="space-y-3">
-              <div className="p-3 rounded-2xl bg-purple-50/60 border border-purple-100 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <Gift className="h-4 w-4 text-purple-600" />
-                  <div>
-                    <p className="font-bold text-slate-800">Kriti Sharma</p>
-                    <p className="text-[10px] text-purple-700 font-medium">12 Jun • Birthday</p>
+              {(calendarEvents || []).slice(0, 3).map(evt => (
+                <div key={evt.id} className="p-3 rounded-2xl bg-purple-50/60 border border-purple-100 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    {evt.type === 'Birthday' ? <Gift className="h-4 w-4 text-purple-600" /> : <Award className="h-4 w-4 text-amber-600" />}
+                    <div>
+                      <p className="font-bold text-slate-800">{evt.title}</p>
+                      <p className="text-[10px] text-purple-700 font-medium">{evt.date} • {evt.type}</p>
+                    </div>
                   </div>
+                  <span className="text-[10px] font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full">{evt.description}</span>
                 </div>
-                <span className="text-[10px] font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full">Turns 26</span>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-amber-50/60 border border-amber-100 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <Award className="h-4 w-4 text-amber-600" />
-                  <div>
-                    <p className="font-bold text-slate-800">Meera Krishnan</p>
-                    <p className="text-[10px] text-amber-700 font-medium">16 Jun • Work Anniversary</p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">2 Years</span>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -411,22 +394,16 @@ export const ManagerDashboardPage = () => {
           <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-4">
             <h3 className="text-sm font-extrabold text-slate-900">Recent Team Activity</h3>
             <div className="space-y-3 text-xs">
-              <div className="flex items-start gap-2.5 text-slate-600">
-                <div className="h-2 w-2 rounded-full bg-saath-500 mt-1.5 shrink-0" />
-                <p><strong className="text-slate-800">Anjali Mehta</strong> submitted a leave request (Casual Leave)</p>
-              </div>
-              <div className="flex items-start gap-2.5 text-slate-600">
-                <div className="h-2 w-2 rounded-full bg-orange-500 mt-1.5 shrink-0" />
-                <p><strong className="text-slate-800">Rahul Das</strong> checked in late at 09:42 AM</p>
-              </div>
-              <div className="flex items-start gap-2.5 text-slate-600">
-                <div className="h-2 w-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
-                <p><strong className="text-slate-800">Neha Gupta</strong> submitted an attendance correction request</p>
-              </div>
-              <div className="flex items-start gap-2.5 text-slate-600">
-                <div className="h-2 w-2 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
-                <p><strong className="text-slate-800">Karan Verma</strong> completed probation milestone review</p>
-              </div>
+              {notifications.length === 0 ? (
+                <p className="text-center text-slate-400 py-4 font-medium">No recent team activity logged.</p>
+              ) : (
+                notifications.slice(0, 4).map(n => (
+                  <div key={n.id} className="flex items-start gap-2.5 text-slate-600">
+                    <div className="h-2 w-2 rounded-full bg-saath-500 mt-1.5 shrink-0" />
+                    <p><strong className="text-slate-800">{n.title}:</strong> {n.message}</p>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 

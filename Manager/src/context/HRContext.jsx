@@ -25,7 +25,16 @@ export const HRProvider = ({ children }) => {
   const loadInitial = (key, fallback) => {
     try {
       const saved = localStorage.getItem(`saath_manager_${key}`);
-      return saved ? JSON.parse(saved) : fallback;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const str = JSON.stringify(parsed);
+        if (str.includes('EMP-00') || str.includes('Anjali Mehta') || str.includes('Rahul Das') || str.includes('Priya Nair') || str.includes('Sneha Iyer')) {
+          localStorage.removeItem(`saath_manager_${key}`);
+          return fallback;
+        }
+        return parsed;
+      }
+      return fallback;
     } catch (e) {
       console.error(`Error loading key saath_manager_${key}:`, e);
       return fallback;

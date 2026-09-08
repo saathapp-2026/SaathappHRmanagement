@@ -140,15 +140,15 @@ export const ConcernsPage = () => {
 
     submitConcern({
       employeeId: currentUser?.employeeId || employees[0]?.id || 'EMP-2026-001',
-      employeeName: currentUser?.fullName || employees[0]?.fullName || 'Rajesh Sharma',
+      employeeName: currentUser?.fullName || employees[0]?.fullName || 'Rohit Mehta',
       departmentName: currentUser?.department || employees[0]?.departmentName || 'Human Resources',
       category: concernForm.category,
       priority: concernForm.priority,
       subject: concernForm.subject,
       description: concernForm.description,
       attachmentUrl: concernForm.attachmentUrl,
-      assignedHrId: 'EMP-2026-002',
-      assignedHrName: 'Priya Mehta'
+      assignedHrId: '',
+      assignedHrName: 'HR Team'
     });
 
     setIsConcernModal(false);
@@ -167,7 +167,7 @@ export const ConcernsPage = () => {
 
     submitHelpRequest({
       employeeId: currentUser?.employeeId || employees[0]?.id || 'EMP-2026-001',
-      employeeName: currentUser?.fullName || employees[0]?.fullName || 'Rajesh Sharma',
+      employeeName: currentUser?.fullName || employees[0]?.fullName || 'Rohit Mehta',
       departmentName: currentUser?.department || employees[0]?.departmentName || 'Human Resources',
       category: helpForm.category,
       priority: 'Medium',

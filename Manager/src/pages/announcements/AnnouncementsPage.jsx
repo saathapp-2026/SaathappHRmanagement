@@ -23,7 +23,7 @@ export const AnnouncementsPage = () => {
     addAnnouncement({
       ...form,
       status: 'Published',
-      authorName: `${currentUser?.fullName || 'Rajesh Sharma'} (${currentUser?.role || 'HR Director'})`
+      authorName: `${currentUser?.fullName || 'Rohit Mehta'} (${currentUser?.role || 'Engineering Manager'})`
     });
 
     setIsModalOpen(false);
